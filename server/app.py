@@ -1,4 +1,4 @@
-from flask import Flask, request, make_response
+from flask import Flask, request, make_response, jsonify
 from flask_migrate import Migrate 
 from flask_restful import Api, Resource
 from flask_media import Media
@@ -11,6 +11,10 @@ from sqlalchemy import MetaData
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+app.config['MEDIA_PATH'] = '../server/videos'
+app.config['MEDIA_ALLOWED_EXTENSIONS'] = ['jpg', 'mp4']
+app.config['MEDIA_DEFAULT_ENDPOINT'] = 'default'
+app.config['MEDIA_DEFAULT_URL'] = 'https://ih1.redbubble.net/image.2924701484.4363/flat,750x,075,f-pad,750x1000,f8f8f8.jpg'
 app.json.compact = False
 
 metadata = MetaData()
@@ -21,11 +25,11 @@ db.init_app(app)
 
 api = Api(app)
 
-class Home(Resource):
+class HelloWorld(Resource):
     def get(self):
-        return make_response({"message":"This is working"})
+        return jsonify({'message': 'Hello, World!'})
 
-api.add_resource(Home, '/')
+api.add_resource(HelloWorld, '/')
 
 
 if __name__ == '__main__':
