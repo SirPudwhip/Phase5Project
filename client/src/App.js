@@ -1,7 +1,16 @@
 import logo from './logo.svg';
 import './App.css';
+import {useEffect} from 'react';
 
 function App() {
+
+  useEffect(() => {
+    fetch('/')
+    .then(r => r.json())
+    .then(console.log)
+  }, [])
+
+  
   return (
     <div className="App">
       <header className="App-header">
