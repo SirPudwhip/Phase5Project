@@ -3,9 +3,10 @@ from sqlalchemy.orm import validates
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.hybrid import hybrid_property
-from flask_bcrypt import bcrypt
+
 
 db = SQLAlchemy()
+
 
 class Video(db.Model, SerializerMixin):
     __tablename__ = 'videos'
@@ -36,7 +37,7 @@ class User(db.Model):
 
     def authenticate(self, password): 
         return bcrypt.check_password_hash(
-            self._password_has, password.encode('utf-8')
+            self._password_hash, password.encode('utf-8')
         )
 
     @staticmethod
