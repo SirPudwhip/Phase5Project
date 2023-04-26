@@ -1,4 +1,4 @@
-from flask import Flask, request, make_response, jsonify
+from flask import Flask, request, make_response, jsonify, session
 from flask_migrate import Migrate 
 from flask_restful import Api, Resource
 from flask_media import Media
@@ -6,12 +6,14 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 from models import db, User
 from flask_bcrypt import Bcrypt
+import secrets 
 
 
 
 
 app = Flask(__name__)
 
+app.secret_key= secrets.token_hex(32)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['MEDIA_PATH'] = '../server/videos'
@@ -37,6 +39,7 @@ class Login(Resource):
         data = request.get_json()
         email = data['email']
         password = data['password']
+
         user = User.query.filter(User.email == email).first()
 
         if user is None:
@@ -45,12 +48,14 @@ class Login(Resource):
             return make_response({"error": "Incorrect password"}, 404)
 
         session.permanent = True
-        session[user.id] = user.id
+        session['user.id'] = user.id
             
         return make_response({
             'username': user.username,
             'email': user.email
         }, 200)
+
+api.add_resource(Login, '/login')
         
 
 class CheckSession(Resource):
